@@ -77,13 +77,13 @@ function calculateExpectedPrice() {
             priceAdjustment -= 0.01; // 가격 3% 감소
         }
         if (sellVolumeHigh > 0) {
-            priceAdjustment += 0.01; // 가격 3% 증가
+            priceAdjustment += 0.015; // 가격 3% 증가
         }
         if (buyVolumeLow > 0) {
             priceAdjustment -= 0.01; // 가격 3% 감소
         }
         if (buyVolumeHigh > 0) {
-            priceAdjustment += 0.01; // 가격 3% 증가
+            priceAdjustment += 0.015; // 가격 3% 증가
         }
     }
 
@@ -91,14 +91,14 @@ function calculateExpectedPrice() {
     if (position === "high") {
         priceAdjustment -= 0.03; // 고점에 가까우면 0.03 감소
     } else if (position === "low") {
-        priceAdjustment += 0.03; // 저점에 가까우면 0.03 증가
+        priceAdjustment += 0.06; // 저점에 가까우면 0.03 증가
     }
     // 중간일 경우는 조정 없음
 
     // 고점과 저점을 이용한 가격 조정
     const priceRange = highPrice - lowPrice;
     if (trend > 0) {
-        priceAdjustment += (priceRange * 0.02) / currentPrice; // 상승세일 경우 가격 조정
+        priceAdjustment += (priceRange * 0.03) / currentPrice; // 상승세일 경우 가격 조정
     } else if (trend < 0) {
         priceAdjustment -= (priceRange * 0.02) / currentPrice; // 하락세일 경우 가격 조정
     }
@@ -134,7 +134,7 @@ function calculateExpectedPrice() {
             weightDecay = 0.5; // 50% 감소
             break;
         case 7: // 7달 이내
-            weightDecay = 0.4; // 70% 감소
+            weightDecay = 0.38; // 70% 감소
             break;
         case 12: // 1년 이내
             weightDecay = 0.3; // 80% 감소
