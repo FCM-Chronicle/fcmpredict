@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FC 모바일 선수 가격 예측기</title>
+    <style>
+        @font-face {
+    font-family: 'S-CoreDream-3Light';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-3Light.woff') format('woff');
+    font-weight: 300; /* Light */
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'S-CoreDream-3Bold';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-3Bold.woff') format('woff');
+    font-weight: 600; /* Bold */
+    font-style: normal;
+}
+
+body {
+    font-family: 'S-CoreDream-3Light', sans-serif; /* 기본 글씨체 */
+    margin: 0;
+    padding: 0;
+    min-height: 100vh; /* 최소 높이를 뷰포트 높이로 설정 */
+    overflow-y: auto; /* 세로 스크롤 가능 */
+    background-image: url('https://cdn.glitch.global/f5a9902b-c81e-4fb1-ac8e-f559a05cffc7/1000029475.jpg?v=1738890478047'); /* 배경 이미지 설정 */
+    background-size: cover; /* 배경 이미지를 화면에 맞게 조정 */
+    background-position: center; /* 배경 이미지를 중앙에 배치 */
+    position: relative; /* 자식 요소의 절대 위치 기준 */
+}
+
+.sparkle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* 클릭 이벤트 무시 */
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 20%, transparent 20%) 0 0;
+    background-size: 200% 200%;
+    animation: sparkle 2s infinite; /* 애니메이션 */
+}
+
+@keyframes sparkle {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 100% 100%; /* 배경이 이동하면서 반짝이는 효과 */
+    }
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0); /* 배경을 반투명하게 설정 */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: relative; /* 컨테이너를 상대 위치로 설정 */
+    z-index: 1; /* z-index를 설정하여 배경 이미지 위에 위치하게 함 */
+}
+
+h1 {
+    text-align: center;
+    color: #ffffff; /* 흰색으로 변경 */
+    font-family: 'S-CoreDream-3Bold', sans-serif; /* 두꺼운 글씨체 사용 */
+    font-size: 24px; /* 타이틀 크기를 줄임 (원하는 크기로 조정 가능) */
+}
+
+label {
+    display: block;
+    margin: 10px 0 5px;
+    color: #ffffff; /* 흰색으로 유지 */
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+    color: #000000; /* 입력된 텍스트 색상을 검은색으로 설정 */
+    background-color: rgba(255, 255, 255, 0.8); /* 배경색을 유지 */
+}
+
+input::placeholder {
+    color: #000000; /* 설명 텍스트 색상을 검은색으로 설정 */
+}
+
+input:focus, select:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.result {
+    padding: 15px;
+    background-color: #e7f9e7;
+    border: 1px solid #4CAF50;
+    border-radius: 5px;
+    margin-top: 20px;
+    text-align: center;
+    font-weight: bold;
+    color: #000000; /* 검은색으로 변경 */
+}
+
+.footer {
+    text-align: center; /* 중앙 정렬 */
+    color: #ffffff; /* 흰색으로 설정 */
+    padding: 20px 0; /* 위아래 여백 추가 */
+    position: relative; /* 상대 위치 설정 */
+    bottom: 0; /* 페이지 하단에 고정 */
+    width: 100%; /* 전체 너비 */
+}
+    </style>
+</head>
+        <h1>FC 모바일 선수 가격 예측기</h1>
+
+        <label for="currentPrice">현재 가격:</label>
+        <input type="text" id="currentPrice" placeholder="선수 세부사항에서 보이는 가격">
+
+        <label for="highPrice">고점:</label>
+        <input type="text" id="highPrice" placeholder="그래프에서 가장 높은 가격">
+
+        <label for="lowPrice">저점:</label>
+        <input type="text" id="lowPrice" placeholder="그래프에서 가장 낮은 가격">
+
+        <label for="trend">현재 그래프 추세:</label>
+        <select id="trend">
+            <option value="0.1">상승세</option>
+            <option value="-0.1">하락세</option>
+            <option value="0">안정세</option>
+        </select>
+
+        <label for="position">현재 그래프 위치:</label>
+        <select id="position">
+            <option value="high">고점에 가까움</option>
+            <option value="mid">중간</option>
+            <option value="low">저점에 가까움</option>
+        </select>
+      
+      <label for="sellVolume">현재 파란불 (상, 중, 하):</label>
+        <input type="text" id="sellVolume" placeholder="예: 10,7,5">
+
+        <label for="buyVolume">현재 빨간불 (상, 중, 하):</label>
+        <input type="text" id="buyVolume" placeholder="예: 15,10,8">
+      
+      <label for="activeTrade">거래가 활발한 매물인가요?</label>
+        <select id="activeTrade">
+            <option value="yes">예</option>
+            <option value="no">아니요</option>
+        </select>
+
+        <label for="hardLimit">하한작을 당하고 있습니까?</label>
+        <select id="hardLimit">
+            <option value="no">아니오</option>
+            <option value="yes">예</option>
+        </select>
+
+        <label for="releaseDuration">선수가 출시된 지 얼마나 되었나요?</label>
+        <select id="releaseDuration">
+            <option value="1">1달 이내</option>
+            <option value="2">2달 이내</option>
+            <option value="3">3달 이내</option>
+            <option value="5">5달 이내</option>
+            <option value="7">7달 이내</option>
+            <option value="12">1년 이내</option>
+        </select>
+
+        <label for="updateStatus">업데이트 여부:</label>
+        <select id="updateStatus">
+            <option value="0">업데이트 없음</option>
+            <option value="-0.05">큰 업데이트</option>
+            <option value="-0.03">중간 업데이트</option>
+            <option value="0">작은 업데이트</option>
+        </select>
+
+        <label for="eventStatus">이벤트:</label>
+        <select id="eventStatus">
+            <option value="0">이벤트 없음</option>
+            <option value="-0.06">선수가 뿌려짐</option>
+            <option value="-0.04">성능이 비슷하거나 좋은 꽁선수 출시</option>
+            <option value="0.04">신규 메타에 맞음</option>
+            <option value="0.08">현재 선수 생제</option>
+            <option value="-0.04">신규 메타에 안맞음</option>
+        </select>
+
+        <label for="playerStatus">현재 선수 상황:</label>
+        <select id="playerStatus">
+            <option value="0">1티어</option>
+            <option value="0.06">낭만이 있는데 좋음</option>
+            <option value="0.02">유튜버가 좋다고 언급함</option>
+            <option value="0.02">낭만이 있는데 안좋음</option>
+            <option value="0.02">2티어</option>
+            <option value="0.03">가성비</option>
+            <option value="-0.02">3티어</option>
+            <option value="-0.04">4티어(안좋음)</option>
+        </select>
+
+        <label for="predictionDuration">예측 기간:</label>
+        <select id="predictionDuration">
+            <option value="3">3일 뒤</option>
+            <option value="5">5일 뒤</option>
+            <option value="7">1주일 뒤</option>
+            <option value="14">2주일 뒤</option>
+            <option value="21">3주일 뒤</option>
+        </select>
+
+        <button onclick="calculateExpectedPrice()">예상 가격 계산</button>
+
+        <div class="result" id="result"></div>
+    </div>
+    <footer class="footer">
+        이 페이지에는 S-Core에서 제공한 에스코어 드림이 적용되어 있습니다.<br>
+        배경 출처: Electronic Arts
+      <br>
+      <br>
+      <br>
+      감사한 분들<br>
+      얼토레앙<br>
+      범준<br>
+      Kingisback<br>
+      LEHO<br>
+      KKONG<br>
+      김델타<br>
+      손트남<br>
+      사과ap<br>
+      재임<br>
+      토트넘우승기원<br>
+      빛나핑<br><br><br>
+      MADE BY FCM/CHRONICLE
+      <br> 이 프로그램은 현재 상황이 지속된다는 가정 하에 예측하는 것이므로 너무 맹신하시면 안됩니다(이걸로 입은 손해는 저희가 책임지지 않습니다)
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
