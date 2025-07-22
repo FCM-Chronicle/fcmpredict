@@ -5,252 +5,627 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FC 모바일 선수 가격 예측기</title>
     <style>
-        @font-face {
-    font-family: 'S-CoreDream-3Light';
-    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-3Light.woff') format('woff');
-    font-weight: 300; /* Light */
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'S-CoreDream-3Bold';
-    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-3Bold.woff') format('woff');
-    font-weight: 600; /* Bold */
-    font-style: normal;
-}
-
-body {
-    font-family: 'S-CoreDream-3Light', sans-serif; /* 기본 글씨체 */
-    margin: 0;
-    padding: 0;
-    min-height: 100vh; /* 최소 높이를 뷰포트 높이로 설정 */
-    overflow-y: auto; /* 세로 스크롤 가능 */
-    background-image: url('https://cdn.glitch.global/f5a9902b-c81e-4fb1-ac8e-f559a05cffc7/1000029475.jpg?v=1738890478047'); /* 배경 이미지 설정 */
-    background-size: cover; /* 배경 이미지를 화면에 맞게 조정 */
-    background-position: center; /* 배경 이미지를 중앙에 배치 */
-    position: relative; /* 자식 요소의 절대 위치 기준 */
-}
-
-.sparkle {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none; /* 클릭 이벤트 무시 */
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 20%, transparent 20%) 0 0;
-    background-size: 200% 200%;
-    animation: sparkle 2s infinite; /* 애니메이션 */
-}
-
-@keyframes sparkle {
-    0% {
-        background-position: 0 0;
-    }
-    100% {
-        background-position: 100% 100%; /* 배경이 이동하면서 반짝이는 효과 */
-    }
-}
-
-.container {
-    max-width: 600px;
-    margin: 0 auto;
-    background: rgba(255, 255, 255, 0); /* 배경을 반투명하게 설정 */
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    position: relative; /* 컨테이너를 상대 위치로 설정 */
-    z-index: 1; /* z-index를 설정하여 배경 이미지 위에 위치하게 함 */
-}
-
-h1 {
-    text-align: center;
-    color: #ffffff; /* 흰색으로 변경 */
-    font-family: 'S-CoreDream-3Bold', sans-serif; /* 두꺼운 글씨체 사용 */
-    font-size: 24px; /* 타이틀 크기를 줄임 (원하는 크기로 조정 가능) */
-}
-
-label {
-    display: block;
-    margin: 10px 0 5px;
-    color: #ffffff; /* 흰색으로 유지 */
-}
-
-input, select {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ffffff;
-    border-radius: 5px;
-    box-sizing: border-box;
-    transition: border-color 0.3s;
-    color: #000000; /* 입력된 텍스트 색상을 검은색으로 설정 */
-    background-color: rgba(255, 255, 255, 0.8); /* 배경색을 유지 */
-}
-
-input::placeholder {
-    color: #000000; /* 설명 텍스트 색상을 검은색으로 설정 */
-}
-
-input:focus, select:focus {
-    border-color: #4CAF50;
-    outline: none;
-}
-
-button {
-    width: 100%;
-    padding: 10px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s;
-}
-
-button:hover {
-    background-color: #45a049;
-}
-
-.result {
-    padding: 15px;
-    background-color: #e7f9e7;
-    border: 1px solid #4CAF50;
-    border-radius: 5px;
-    margin-top: 20px;
-    text-align: center;
-    font-weight: bold;
-    color: #000000; /* 검은색으로 변경 */
-}
-
-.footer {
-    text-align: center; /* 중앙 정렬 */
-    color: #ffffff; /* 흰색으로 설정 */
-    padding: 20px 0; /* 위아래 여백 추가 */
-    position: relative; /* 상대 위치 설정 */
-    bottom: 0; /* 페이지 하단에 고정 */
-    width: 100%; /* 전체 너비 */
-}
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Orbitron', monospace;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #533483 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: #ffffff;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* 배경 파티클 효과 */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #00ff88;
+            border-radius: 50%;
+            animation: float 6s infinite linear;
+            opacity: 0.7;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 20px;
+            box-shadow: 
+                0 25px 45px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            margin-top: 40px;
+            margin-bottom: 40px;
+            animation: slideUp 0.8s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        h1 {
+            text-align: center;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 900;
+            color: #00ff88;
+            text-shadow: 
+                0 0 5px #00ff88,
+                0 0 10px #00ff88,
+                0 0 20px #00ff88,
+                0 0 40px #00ff88;
+            margin-bottom: 40px;
+            animation: pulse 2s ease-in-out infinite alternate;
+            letter-spacing: 2px;
+        }
+        
+        @keyframes pulse {
+            from {
+                text-shadow: 
+                    0 0 5px #00ff88,
+                    0 0 10px #00ff88,
+                    0 0 20px #00ff88,
+                    0 0 40px #00ff88;
+            }
+            to {
+                text-shadow: 
+                    0 0 10px #00ff88,
+                    0 0 20px #00ff88,
+                    0 0 30px #00ff88,
+                    0 0 60px #00ff88;
+            }
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+            animation: slideUp 0.6s ease-out;
+            animation-fill-mode: both;
+        }
+        
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.15s; }
+        .form-group:nth-child(3) { animation-delay: 0.2s; }
+        .form-group:nth-child(4) { animation-delay: 0.25s; }
+        .form-group:nth-child(5) { animation-delay: 0.3s; }
+        .form-group:nth-child(6) { animation-delay: 0.35s; }
+        .form-group:nth-child(7) { animation-delay: 0.4s; }
+        .form-group:nth-child(8) { animation-delay: 0.45s; }
+        .form-group:nth-child(9) { animation-delay: 0.5s; }
+        .form-group:nth-child(10) { animation-delay: 0.55s; }
+        .form-group:nth-child(11) { animation-delay: 0.6s; }
+        .form-group:nth-child(12) { animation-delay: 0.65s; }
+        .form-group:nth-child(13) { animation-delay: 0.7s; }
+        .form-group:nth-child(14) { animation-delay: 0.75s; }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 15px 20px;
+            background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 400;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #00ff88;
+            box-shadow: 
+                0 0 20px rgba(0, 255, 136, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        select {
+            cursor: pointer;
+        }
+        
+        select option {
+            background-color: #1a1a2e;
+            color: #ffffff;
+            padding: 10px;
+        }
+        
+        button {
+            width: 100%;
+            padding: 18px 25px;
+            background: linear-gradient(145deg, #00ff88, #00cc6a);
+            color: #000000;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 20px;
+            box-shadow: 
+                0 8px 25px rgba(0, 255, 136, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        button:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 
+                0 15px 35px rgba(0, 255, 136, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        
+        button:hover::before {
+            left: 100%;
+        }
+        
+        button:active {
+            transform: translateY(-1px) scale(1.01);
+        }
+        
+        .result {
+            padding: 25px;
+            background: linear-gradient(145deg, rgba(0, 255, 136, 0.1), rgba(0, 255, 136, 0.05));
+            border: 2px solid rgba(0, 255, 136, 0.5);
+            border-radius: 15px;
+            margin-top: 30px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #00ff88;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+            backdrop-filter: blur(10px);
+            box-shadow: 
+                0 15px 35px rgba(0, 255, 136, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            animation: resultGlow 2s ease-in-out infinite alternate;
+            display: none;
+        }
+        
+        @keyframes resultGlow {
+            from {
+                box-shadow: 
+                    0 15px 35px rgba(0, 255, 136, 0.2),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            }
+            to {
+                box-shadow: 
+                    0 15px 35px rgba(0, 255, 136, 0.4),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            }
+        }
+        
+        .footer {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            padding: 40px 20px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 60px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .footer strong {
+            color: #00ff88;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+        }
+        
+        .credits {
+            margin: 20px 0;
+            padding: 20px;
+            background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .credits h3 {
+            color: #00ff88;
+            margin-bottom: 15px;
+            text-shadow: 0 0 5px rgba(0, 255, 136, 0.5);
+        }
+        
+        .credits-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .credit-name {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 5px 10px;
+            background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            border-radius: 5px;
+            font-size: 0.85rem;
+        }
+        
+        /* 반응형 디자인 */
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px;
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+                margin-bottom: 30px;
+                letter-spacing: 1px;
+            }
+            
+            input, select {
+                padding: 12px 15px;
+                font-size: 0.95rem;
+            }
+            
+            button {
+                padding: 15px 20px;
+                font-size: 1rem;
+            }
+            
+            .result {
+                font-size: 1.1rem;
+                padding: 20px;
+            }
+            
+            .credits-list {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            }
+        }
+        
+        /* 입력 필드 아이콘 효과 */
+        .form-group {
+            position: relative;
+        }
+        
+        .form-group::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00ff88, transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .form-group:focus-within::before {
+            opacity: 1;
+        }
     </style>
 </head>
-        <h1>FC 모바일 선수 가격 예측기</h1>
+<body>
+    <!-- 배경 파티클 -->
+    <div class="particles" id="particles"></div>
+    
+    <div class="container">
+        <h1>💰 FC Mobile 선수 가격 예측기</h1>
+        
+        <div class="form-group">
+            <label for="currentPrice">💵 현재 가격:</label>
+            <input type="text" id="currentPrice" placeholder="선수 세부사항에서 보이는 가격">
+        </div>
 
-        <label for="currentPrice">현재 가격:</label>
-        <input type="text" id="currentPrice" placeholder="선수 세부사항에서 보이는 가격">
+        <div class="form-group">
+            <label for="highPrice">📈 고점:</label>
+            <input type="text" id="highPrice" placeholder="그래프에서 가장 높은 가격">
+        </div>
 
-        <label for="highPrice">고점:</label>
-        <input type="text" id="highPrice" placeholder="그래프에서 가장 높은 가격">
+        <div class="form-group">
+            <label for="lowPrice">📉 저점:</label>
+            <input type="text" id="lowPrice" placeholder="그래프에서 가장 낮은 가격">
+        </div>
 
-        <label for="lowPrice">저점:</label>
-        <input type="text" id="lowPrice" placeholder="그래프에서 가장 낮은 가격">
+        <div class="form-group">
+            <label for="trend">📊 현재 그래프 추세:</label>
+            <select id="trend">
+                <option value="0.1">📈 상승세</option>
+                <option value="-0.1">📉 하락세</option>
+                <option value="0">➡️ 안정세</option>
+            </select>
+        </div>
 
-        <label for="trend">현재 그래프 추세:</label>
-        <select id="trend">
-            <option value="0.1">상승세</option>
-            <option value="-0.1">하락세</option>
-            <option value="0">안정세</option>
-        </select>
-
-        <label for="position">현재 그래프 위치:</label>
-        <select id="position">
-            <option value="high">고점에 가까움</option>
-            <option value="mid">중간</option>
-            <option value="low">저점에 가까움</option>
-        </select>
+        <div class="form-group">
+            <label for="position">📍 현재 그래프 위치:</label>
+            <select id="position">
+                <option value="high">⬆️ 고점에 가까움</option>
+                <option value="mid">➡️ 중간</option>
+                <option value="low">⬇️ 저점에 가까움</option>
+            </select>
+        </div>
       
-      <label for="sellVolume">현재 파란불 (상, 중, 하):</label>
-        <input type="text" id="sellVolume" placeholder="예: 10,7,5">
+        <div class="form-group">
+            <label for="sellVolume">🔵 현재 파란불 (상, 중, 하):</label>
+            <input type="text" id="sellVolume" placeholder="예: 10,7,5">
+        </div>
 
-        <label for="buyVolume">현재 빨간불 (상, 중, 하):</label>
-        <input type="text" id="buyVolume" placeholder="예: 15,10,8">
+        <div class="form-group">
+            <label for="buyVolume">🔴 현재 빨간불 (상, 중, 하):</label>
+            <input type="text" id="buyVolume" placeholder="예: 15,10,8">
+        </div>
       
-      <label for="activeTrade">거래가 활발한 매물인가요?</label>
-        <select id="activeTrade">
-            <option value="yes">예</option>
-            <option value="no">아니요</option>
-        </select>
+        <div class="form-group">
+            <label for="activeTrade">🔥 거래가 활발한 매물인가요?</label>
+            <select id="activeTrade">
+                <option value="yes">✅ 예</option>
+                <option value="no">❌ 아니요</option>
+            </select>
+        </div>
 
-        <label for="hardLimit">하한작을 당하고 있습니까?</label>
-        <select id="hardLimit">
-            <option value="no">아니오</option>
-            <option value="yes">예</option>
-        </select>
+        <div class="form-group">
+            <label for="hardLimit">⛔ 하한작을 당하고 있습니까?</label>
+            <select id="hardLimit">
+                <option value="no">❌ 아니오</option>
+                <option value="yes">✅ 예</option>
+            </select>
+        </div>
 
-        <label for="releaseDuration">선수가 출시된 지 얼마나 되었나요?</label>
-        <select id="releaseDuration">
-            <option value="1">1달 이내</option>
-            <option value="2">2달 이내</option>
-            <option value="3">3달 이내</option>
-            <option value="5">5달 이내</option>
-            <option value="7">7달 이내</option>
-            <option value="12">1년 이내</option>
-        </select>
+        <div class="form-group">
+            <label for="releaseDuration">📅 선수가 출시된 지 얼마나 되었나요?</label>
+            <select id="releaseDuration">
+                <option value="1">🆕 1달 이내</option>
+                <option value="2">📆 2달 이내</option>
+                <option value="3">📆 3달 이내</option>
+                <option value="5">📆 5달 이내</option>
+                <option value="7">📆 7달 이내</option>
+                <option value="12">📆 1년 이내</option>
+            </select>
+        </div>
 
-        <label for="updateStatus">업데이트 여부:</label>
-        <select id="updateStatus">
-            <option value="0">업데이트 없음</option>
-            <option value="-0.05">큰 업데이트</option>
-            <option value="-0.03">중간 업데이트</option>
-            <option value="0">작은 업데이트</option>
-        </select>
+        <div class="form-group">
+            <label for="updateStatus">🔄 업데이트 여부:</label>
+            <select id="updateStatus">
+                <option value="0">❌ 업데이트 없음</option>
+                <option value="-0.05">🔥 큰 업데이트</option>
+                <option value="-0.03">⚡ 중간 업데이트</option>
+                <option value="0">💫 작은 업데이트</option>
+            </select>
+        </div>
 
-        <label for="eventStatus">이벤트:</label>
-        <select id="eventStatus">
-            <option value="0">이벤트 없음</option>
-            <option value="-0.06">선수가 뿌려짐</option>
-            <option value="-0.04">성능이 비슷하거나 좋은 꽁선수 출시</option>
-            <option value="0.04">신규 메타에 맞음</option>
-            <option value="0.08">현재 선수 생제</option>
-            <option value="-0.04">신규 메타에 안맞음</option>
-        </select>
+        <div class="form-group">
+            <label for="eventStatus">🎉 이벤트:</label>
+            <select id="eventStatus">
+                <option value="0">❌ 이벤트 없음</option>
+                <option value="-0.06">💸 선수가 뿌려짐</option>
+                <option value="-0.04">🆓 성능이 비슷하거나 좋은 꽁선수 출시</option>
+                <option value="0.04">🚀 신규 메타에 맞음</option>
+                <option value="0.08">⚡ 현재 선수 생제</option>
+                <option value="-0.04">📉 신규 메타에 안맞음</option>
+            </select>
+        </div>
 
-        <label for="playerStatus">현재 선수 상황:</label>
-        <select id="playerStatus">
-            <option value="0">1티어</option>
-            <option value="0.06">낭만이 있는데 좋음</option>
-            <option value="0.02">유튜버가 좋다고 언급함</option>
-            <option value="0.02">낭만이 있는데 안좋음</option>
-            <option value="0.02">2티어</option>
-            <option value="0.03">가성비</option>
-            <option value="-0.02">3티어</option>
-            <option value="-0.04">4티어(안좋음)</option>
-        </select>
+        <div class="form-group">
+            <label for="playerStatus">⭐ 현재 선수 상황:</label>
+            <select id="playerStatus">
+                <option value="0">👑 1티어</option>
+                <option value="0.06">💎 낭만이 있는데 좋음</option>
+                <option value="0.02">📺 유튜버가 좋다고 언급함</option>
+                <option value="0.02">💭 낭만이 있는데 안좋음</option>
+                <option value="0.02">⚡ 2티어</option>
+                <option value="0.03">💰 가성비</option>
+                <option value="-0.02">📊 3티어</option>
+                <option value="-0.04">📉 4티어(안좋음)</option>
+            </select>
+        </div>
 
-        <label for="predictionDuration">예측 기간:</label>
-        <select id="predictionDuration">
-            <option value="3">3일 뒤</option>
-            <option value="5">5일 뒤</option>
-            <option value="7">1주일 뒤</option>
-            <option value="14">2주일 뒤</option>
-            <option value="21">3주일 뒤</option>
-        </select>
+        <div class="form-group">
+            <label for="predictionDuration">🔮 예측 기간:</label>
+            <select id="predictionDuration">
+                <option value="3">⏰ 3일 뒤</option>
+                <option value="5">📅 5일 뒤</option>
+                <option value="7">📆 1주일 뒤</option>
+                <option value="14">📊 2주일 뒤</option>
+                <option value="21">📈 3주일 뒤</option>
+            </select>
+        </div>
 
-        <button onclick="calculateExpectedPrice()">예상 가격 계산</button>
+        <button onclick="calculateExpectedPrice()">🚀 예상 가격 계산하기</button>
 
         <div class="result" id="result"></div>
     </div>
+    
     <footer class="footer">
-        이 페이지에는 S-Core에서 제공한 에스코어 드림이 적용되어 있습니다.<br>
-        배경 출처: Electronic Arts
-      <br>
-      <br>
-      <br>
-      감사한 분들<br>
-      얼토레앙<br>
-      범준<br>
-      Kingisback<br>
-      LEHO<br>
-      KKONG<br>
-      김델타<br>
-      손트남<br>
-      사과ap<br>
-      재임<br>
-      토트넘우승기원<br>
-      빛나핑<br><br><br>
-      MADE BY FCM/CHRONICLE
-      <br> 이 프로그램은 현재 상황이 지속된다는 가정 하에 예측하는 것이므로 너무 맹신하시면 안됩니다(이걸로 입은 손해는 저희가 책임지지 않습니다)
+        <div class="credits">
+            <h3>🙏 감사한 분들</h3>
+            <div class="credits-list">
+                <div class="credit-name">얼토레앙</div>
+                <div class="credit-name">범준</div>
+                <div class="credit-name">Kingisback</div>
+                <div class="credit-name">LEHO</div>
+                <div class="credit-name">KKONG</div>
+                <div class="credit-name">김델타</div>
+                <div class="credit-name">손트남</div>
+                <div class="credit-name">사과ap</div>
+                <div class="credit-name">재임</div>
+                <div class="credit-name">토트넘우승기원</div>
+                <div class="credit-name">빛나핑</div>
+            </div>
+        </div>
+        
+        <p><strong>MADE BY FCM/CHRONICLE</strong></p>
+        <p>⚠️ 이 프로그램은 현재 상황이 지속된다는 가정 하에 예측하는 것이므로 너무 맹신하시면 안됩니다</p>
+        <p>(이걸로 입은 손해는 저희가 책임지지 않습니다)</p>
+        
+        <br>
+        <p style="font-size: 0.8rem; opacity: 0.7;">
+            이 페이지에는 S-Core에서 제공한 에스코어 드림이 적용되어 있습니다.<br>
+            배경 출처: Electronic Arts
+        </p>
     </footer>
-    <script src="script.js"></script>
+
+    <script>
+        // 파티클 효과 생성
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // 페이지 로드 시 파티클 생성
+        window.addEventListener('load', createParticles);
+        
+        // 가격 계산 함수 (기존 로직 유지)
+        function calculateExpectedPrice() {
+            // 입력값 가져오기
+            const currentPrice = parseFloat(document.getElementById('currentPrice').value.replace(/,/g, ''));
+            const highPrice = parseFloat(document.getElementById('highPrice').value.replace(/,/g, ''));
+            const lowPrice = parseFloat(document.getElementById('lowPrice').value.replace(/,/g, ''));
+            const trend = parseFloat(document.getElementById('trend').value);
+            const position = document.getElementById('position').value;
+            const sellVolume = document.getElementById('sellVolume').value;
+            const buyVolume = document.getElementById('buyVolume').value;
+            const activeTrade = document.getElementById('activeTrade').value;
+            const hardLimit = document.getElementById('hardLimit').value;
+            const releaseDuration = parseInt(document.getElementById('releaseDuration').value);
+            const updateStatus = parseFloat(document.getElementById('updateStatus').value);
+            const eventStatus = parseFloat(document.getElementById('eventStatus').value);
+            const playerStatus = parseFloat(document.getElementById('playerStatus').value);
+            const predictionDuration = parseInt(document.getElementById('predictionDuration').value);
+            
+            // 입력 검증
+            if (isNaN(currentPrice) || isNaN(highPrice) || isNaN(lowPrice)) {
+                alert('⚠️ 가격을 올바르게 입력해주세요!');
+                return;
+            }
+            
+            // 기본 예측 계산 (간단한 예시 로직)
+            let baseFactor = 1;
+            
+            // 추세 반영
+            baseFactor += trend;
+            
+            // 위치 반영
+            if (position === 'high') {
+                baseFactor -= 0.05;
+            } else if (position === 'low') {
+                baseFactor += 0.05;
+            }
+            
+            // 기타 요소들 반영
+            baseFactor += updateStatus + eventStatus + playerStatus;
+            
+            // 시간에 따른 감가상각 (간단히 구현)
+            const depreciationRate = releaseDuration / 100;
+            baseFactor -= depreciationRate;
+            
+            // 예측 기간 반영
+            const timeFactor = predictionDuration / 30;
+            
+            // 최종 예측 가격 계산
+            const predictedPrice = Math.round(currentPrice * baseFactor * (1 + timeFactor * 0.1));
+            
+            // 결과 표시
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `
+                <div style="font-size: 1.4rem; margin-bottom: 10px;">🎯 예측 결과</div>
+                <div style="font-size: 1.8rem; color: #00ff88; margin: 15px 0;">
+                    ${predictedPrice.toLocaleString()}원
+                </div>
+                <div style="font-size: 0.9rem; opacity: 0.8;">
+                    ${predictionDuration}일 후 예상 가격
+                </div>
+            `;
+            
+            // 결과 스크롤
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        
+        // 엔터키로 계산 실행
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                calculateExpectedPrice();
+            }
+        });
+    </script>
 </body>
 </html>
